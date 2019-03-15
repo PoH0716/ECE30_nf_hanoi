@@ -76,29 +76,29 @@ errorF: SUBI    X1, XZR, #2         // fly-over error
 //
 // calculate how many moves are required to solve the problem for n disks
 hanoi:
-	STUR	 X10, [SP, -32]		//NOTE: CHANGED X29 AND X30 TO X10 AND X11
-	STUR	 X11, [SP, -24]
-        ADD      X10, SP, XZR
-        STUR     X0, [SP, #28]
-        
-        // when n = 1, return 1
-        LDUR     X0, [SP, #28]
-	SUBIS    XZR, X0, #1		// 100%
-        B.NE     L1			// 100%
-        ADDI     X1, X1, #1		// 100%
-        B        L2			// 100%
-        
-        // when n != 1, return 3*hanoi(n-1)+2
+    SUBI    SP, SP, #32     // allocate stack frame
+    STUR    FP, [SP, #0]    // save old frame pointer
+    ADDI    FP, SP, #24     // set new frame pointer
+    STUR    LR, [FP, #-16]  // save the return address
+    STUR    X0, [FP, #0]    // save the argument n
+
+    SUBIS   XZR, X0, #1     // test for n = 1
+    B.NE    L1              // if n = 1, go to L1
+    ADDI    X1, X1, #1      // if n > 1, call hanoi
+    BL      hanoi
+
+    LDUR    X0, [FP, #0]    // return from BL: restore argument n
+    ADDI    X8, XZR, #3     // return 3 * hanoi(n - 1) + 2
+    MUL     X1, X0, X8
+    ADDI    X1, X1, #2
+    B       done
+
 L1:
-        LDUR     X0, [SP, #28]
-        SUBI     X0, X0, #1
-        BL       hanoi
-	ADD      w1, w0, XZR
-        ADD      w0, w1, XZR
-        LSL      w0, w0, #1
-        ADD      w0, w0, w1
-        ADDI     w0, w0, #2
-L2:
-	LDUR	 X10, [SP], #32
-	LDUR	 X11, [SP], #40
-	BL 	 LR			// 100%
+    ADDI    X1, XZR, #1     // return 1
+
+done:
+    LDUR    LR, [FP, #-16]  // restore the return address
+    LDUR    FP, [FP, #-24]  // restore old frame pointer
+    ADDI    SP, SP, #32     // deallocate stack frame
+
+    BR      LR              // return to the caller
