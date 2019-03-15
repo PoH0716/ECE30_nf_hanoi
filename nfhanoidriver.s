@@ -84,8 +84,8 @@ hanoi:
 
     SUBIS   XZR, X0, #1     // test for n = 1
     B.EQ    L1              // if n = 1, go to L1
-    SUBI    X0, X0, #1      // if n > 1, call hanoi
-    BL      hanoi
+    SUBI    X0, X0, #1      // if n !=1, n = n - 1
+    BL      hanoi           // and call hanoi(n - 1)
 
     LDUR    X0, [FP, #0]    // return from BL: restore argument n
     ADDI    X8, XZR, #3     // return 3 * hanoi(n - 1) + 2
