@@ -75,29 +75,32 @@ errorF: SUBI    X1, XZR, #2         // fly-over error
 //count moves
 //
 //calculate how many moves required to take for n number of disks
-
-hanoi:  stp     X29, X30, [SP, #-32]!
-        mov     X29, SP
-        STUR    X0, [SP, #28]
-
-//when n = 1, return 1
-
-        LDUR    X0, [SP, #28]
-        SUBIS   X0, #1
-        B.NE    L10
-        ADD     X0, XZR, #1
-        B       L11
-
-//when n != 1, return 3*hanoi(n-1)+2
-
-L10:    LDUR    X0, [SP, #28]
-        SUBI    X0, X0, #1
-        BL      hanoi(int)
-        ADD     X1, X0, XZR
-        ADD     X0, X1, XZR
-        LSL     X0, X0, #1
-        ADD     X0, X0, X1
-        ADDI    X0, X0, #2
-
-L11:    ldp     X29, X30, [SP], #32
-        BL LR
+hanoi:
+	STUR	 X29, [SP, -32]
+	STUR	 X30, [SP, -40]
+	// stp      X29, X30, [SP, -32]!
+        ADD      X29, SP, XZR
+        STUR     w0, [SP, #28]
+        
+        //when n = 1, return 1
+        LDUR     X0, [SP, #28]
+	SUBIS    XZR, X0, #1
+        B.NE     L1
+        ADDI     X1, XZR, #1
+        B        L2
+        
+        //when n != 1, return 3*hanoi(n-1)+2
+L1:
+        LDUR     X0, [SP, #28]
+        SUBI     X0, X0, #1
+        BL       hanoi
+	ADD      w1, w0, XZR
+        ADD      w0, w1, XZR
+        LSL      w0, w0, #1
+        ADD      w0, w0, w1
+        ADDI     w0, w0, #2
+L2:
+	LDUR	 X29, [SP], #32
+	LDUR	 X30, [SP], #40
+	// ldp      X29, X30, [SP], #32
+	BL 	 LR
