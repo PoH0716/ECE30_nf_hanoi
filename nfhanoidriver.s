@@ -76,10 +76,10 @@ errorF: SUBI    X1, XZR, #2         // fly-over error
 //
 // calculate how many moves are required to solve the problem for n disks
 hanoi:
-	STUR	 X29, [SP, -32]
-	STUR	 X30, [SP, -40]
-        ADD      X29, SP, XZR
-        STUR     w0, [SP, #28]
+	STUR	 X10, [SP, -32]		//NOTE: CHANGED X29 AND X30 TO X10 AND X11
+	STUR	 X11, [SP, -24]
+        ADD      X10, SP, XZR
+        STUR     X0, [SP, #28]
         
         // when n = 1, return 1
         LDUR     X0, [SP, #28]
@@ -99,6 +99,6 @@ L1:
         ADD      w0, w0, w1
         ADDI     w0, w0, #2
 L2:
-	LDUR	 X29, [SP], #32
-	LDUR	 X30, [SP], #40
+	LDUR	 X10, [SP], #32
+	LDUR	 X11, [SP], #40
 	BL 	 LR			// 100%
