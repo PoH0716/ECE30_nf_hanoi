@@ -78,7 +78,6 @@ errorF: SUBI    X1, XZR, #2         // fly-over error
 hanoi:
 	STUR	 X29, [SP, -32]
 	STUR	 X30, [SP, -40]
-	// stp      X29, X30, [SP, -32]!
         ADD      X29, SP, XZR
         STUR     w0, [SP, #28]
         
@@ -102,5 +101,4 @@ L1:
 L2:
 	LDUR	 X29, [SP], #32
 	LDUR	 X30, [SP], #40
-	// ldp      X29, X30, [SP], #32
 	BL 	 LR
