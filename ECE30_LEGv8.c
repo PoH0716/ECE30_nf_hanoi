@@ -10,8 +10,8 @@ hanoi:
         ADDI     w0, XZR, #1
         B        L2
 L1:
-        LDUR     w0, [SP, #28]
-        SUBI     w0, w0, #1
+        LDUR     X0, [SP, #28]
+        SUBI     X0, X0, #1
         BL       hanoi
 	ADD      w1, w0, XZR
         ADD      w0, w1, XZR
